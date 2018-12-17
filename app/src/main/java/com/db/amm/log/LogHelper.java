@@ -3,7 +3,7 @@ package com.db.amm.log;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.db.amm.BaseApplication;
+import com.db.amm.base.BaseApplication;
 import com.db.amm.BuildConfig;
 
 /**

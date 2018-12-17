@@ -13,8 +13,10 @@ import java.io.InputStream;
 /**
  * Created by kqw on 2016/8/26.
  * 播放音乐的线程
+ * https://github.com/kongqw/AndroidSoundManagerDemo
+ * http://kongqw.com/2016/08/26/2016-08-26-Android%E5%B7%A6%E5%8F%B3%E5%A3%B0%E9%81%93%E7%9A%84%E6%8E%A7%E5%88%B6/
  */
-public class PlayThread extends Thread {
+final class PlayThread extends Thread {
 
     // 采样率
     private int mSampleRateInHz = 16000;
