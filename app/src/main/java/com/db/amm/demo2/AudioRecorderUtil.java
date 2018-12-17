@@ -1,4 +1,4 @@
-package com.db.amm.Demo2;
+package com.db.amm.demo2;
 
 import android.media.AudioFormat;
 import android.media.AudioManager;
