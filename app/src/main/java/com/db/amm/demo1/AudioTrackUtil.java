@@ -7,11 +7,11 @@ import android.app.Activity;
  * @作者：     @Bin
  * @创建时间： @2018/12/17 17:58
  */
-public final class DemoOne {
+public final class AudioTrackUtil {
 
-    private PlayThread mPlayThread;
-    private PlayThread mChannelLeftPlayer;
-    private PlayThread mChannelRightPlayer;
+    private AudioTrackThread mAudioTrackThread;
+    private AudioTrackThread mChannelLeftPlayer;
+    private AudioTrackThread mChannelRightPlayer;
 
     private String mPlayFileName;
     private Activity mActivity;
@@ -20,7 +20,7 @@ public final class DemoOne {
         this.mPlayFileName = mPlayFileName;
     }
 
-    public DemoOne(Activity activity){
+    public AudioTrackUtil(Activity activity){
         this.mActivity = activity;
     }
 
@@ -28,20 +28,20 @@ public final class DemoOne {
      * 开始播放
      */
     public void start(){
-        if (null != mPlayThread) {
-            mPlayThread.stopp();
-            mPlayThread = null;
+        if (null != mAudioTrackThread) {
+            mAudioTrackThread.stopp();
+            mAudioTrackThread = null;
         }
-        mPlayThread = new PlayThread(mActivity, mPlayFileName);
-        mPlayThread.start();
+        mAudioTrackThread = new AudioTrackThread(mActivity, mPlayFileName);
+        mAudioTrackThread.start();
     }
 
     /**
      * 暂停播放
      */
     public void pause(){
-        if (null != mPlayThread) {
-            mPlayThread.pause();
+        if (null != mAudioTrackThread) {
+            mAudioTrackThread.pause();
         }
     }
 
@@ -49,8 +49,8 @@ public final class DemoOne {
      * 继续播放
      */
     public void continuePlay(){
-        if (null != mPlayThread) {
-            mPlayThread.play();
+        if (null != mAudioTrackThread) {
+            mAudioTrackThread.play();
         }
     }
 
@@ -58,9 +58,9 @@ public final class DemoOne {
      * 停止播放
      */
     public void stop(){
-        if (null != mPlayThread) {
-            mPlayThread.stopp();
-            mPlayThread = null;
+        if (null != mAudioTrackThread) {
+            mAudioTrackThread.stopp();
+            mAudioTrackThread = null;
         }
     }
 
@@ -68,8 +68,8 @@ public final class DemoOne {
      * 禁用左声道
      */
     public void disableChannelLeft(){
-        if (null != mPlayThread){
-            mPlayThread.setChannel(false, true);
+        if (null != mAudioTrackThread){
+            mAudioTrackThread.setChannel(false, true);
         }
     }
 
@@ -78,8 +78,8 @@ public final class DemoOne {
      * 禁用右声道
      */
     public void disableChannelRight(){
-        if (null != mPlayThread){
-            mPlayThread.setChannel(true, false);
+        if (null != mAudioTrackThread){
+            mAudioTrackThread.setChannel(true, false);
         }
     }
 
@@ -88,8 +88,8 @@ public final class DemoOne {
      * 恢复双声道
      */
     public void restoreDualChannels(){
-        if (null != mPlayThread){
-            mPlayThread.setChannel(true, true);
+        if (null != mAudioTrackThread){
+            mAudioTrackThread.setChannel(true, true);
         }
     }
 
@@ -108,8 +108,8 @@ public final class DemoOne {
             mChannelRightPlayer = null;
         }
 
-        mChannelLeftPlayer = new PlayThread(mActivity, leftFileName);
-        mChannelRightPlayer = new PlayThread(mActivity, rightFileName);
+        mChannelLeftPlayer = new AudioTrackThread(mActivity, leftFileName);
+        mChannelRightPlayer = new AudioTrackThread(mActivity, rightFileName);
 
         mChannelLeftPlayer.setChannel(true, false);
         mChannelRightPlayer.setChannel(false, true);
@@ -124,8 +124,8 @@ public final class DemoOne {
      * @param balance
      */
     public void  setBalance(int max,int balance){
-        if (null != mPlayThread){
-            mPlayThread.setBalance(max,balance);
+        if (null != mAudioTrackThread){
+            mAudioTrackThread.setBalance(max,balance);
         }
     }
 }

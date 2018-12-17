@@ -11,12 +11,14 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * Created by kqw on 2016/8/26.
- * 播放音乐的线程
+ * @描述：     @音频文件左右声道播放
+ * @作者：     @Bin
+ * @创建时间： @2018/12/17 19:07
+ *
  * https://github.com/kongqw/AndroidSoundManagerDemo
  * http://kongqw.com/2016/08/26/2016-08-26-Android%E5%B7%A6%E5%8F%B3%E5%A3%B0%E9%81%93%E7%9A%84%E6%8E%A7%E5%88%B6/
  */
-final class PlayThread extends Thread {
+final class AudioTrackThread extends Thread {
 
     // 采样率
     private int mSampleRateInHz = 16000;
@@ -25,13 +27,13 @@ final class PlayThread extends Thread {
     // 双声道（立体声）
     // private int mChannelConfig = AudioFormat.CHANNEL_OUT_STEREO;
 
-    private static final String TAG = "PlayThread";
+    private static final String TAG = "AudioTrackThread";
     private Activity mActivity;
     private AudioTrack mAudioTrack;
     private byte[] data;
     private String mFileName;
 
-    public PlayThread(Activity activity, String fileName) {
+    public AudioTrackThread(Activity activity, String fileName) {
         mActivity = activity;
         mFileName = fileName;
 

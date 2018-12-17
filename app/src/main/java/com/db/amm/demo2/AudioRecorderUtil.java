@@ -23,6 +23,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
+ * @描述：     @音频文件左右声道播放
+ * @作者：     @Bin
+ * @创建时间： @2018/12/17 17:58
+ *
  * 使用AudioRecord录制音频
  * 1. AudioRecord通过read()可以获取音频，对音频处理后，保存，弥补了MediaRecord不能对音频数据进行处理的不足
  * 2. AudioRecord录制的为PCM数据，PCM封装为mp3
