@@ -31,10 +31,10 @@ import java.util.Date;
  * 1. AudioRecord通过read()可以获取音频，对音频处理后，保存，弥补了MediaRecord不能对音频数据进行处理的不足
  * 2. AudioRecord录制的为PCM数据，PCM封装为mp3
  */
-public class AudioRecorderUtil{
+public final class AudioRecorderUtil{
 
     /*****************AudioRecord使用的参数**************************/
-    enum Status { //录音的状态
+    public enum Status { //录音的状态
         RUNNING, //正在录音
         END //录音停止
     }
@@ -62,7 +62,7 @@ public class AudioRecorderUtil{
      * http://www.jianshu.com/p/af7787b409a2，声音中采样位数，采样频率，回声，降噪的概念，回声消除
      * http://www.jianshu.com/p/bee958826a9e，AudioTrack源码分析
      */
-    private void startRecord() {
+    public void startRecord() {
         mBufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING); //获取默认最小缓冲区大小
         mAudioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, mBufferSizeInBytes); //初始化
         mAudioRecord.startRecording(); //开始录音
@@ -106,7 +106,7 @@ public class AudioRecorderUtil{
      * 1. 可以对录音文件进行转换，pcm->wav
      * 2. 如果有暂停录音，对多份录音文件进行合并
      */
-    private void stopRecord() {
+    public void stopRecord() {
         mAudioRecord.stop();
         mStatus = Status.END; //设置状态，正在录音的循环会终止
         if (mAudioRecord != null) {
