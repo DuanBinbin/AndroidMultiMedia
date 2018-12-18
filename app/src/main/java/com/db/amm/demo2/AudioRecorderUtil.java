@@ -6,9 +6,11 @@ import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
+import android.nfc.Tag;
 import android.text.TextUtils;
 
 import com.db.amm.base.BaseApplication;
+import com.db.amm.log.LogHelper;
 import com.db.amm.utils.FileUtils;
 import com.db.amm.utils.MediaUtils;
 import com.db.amm.utils.ToastUtils;
@@ -33,6 +35,8 @@ import java.util.Date;
  * 2. AudioRecord录制的为PCM数据，PCM封装为mp3
  */
 public final class AudioRecorderUtil{
+
+    private final static String TAG = AudioRecorderUtil.class.getSimpleName();
 
     /*****************单利实现**************************/
     private static volatile AudioRecorderUtil instance = null;
@@ -170,7 +174,9 @@ public final class AudioRecorderUtil{
             public void run() {
                 DataInputStream dis = null;
                 try {
-                    dis = new DataInputStream(new FileInputStream(mPCMPath));
+                    LogHelper.v(TAG,"playWithAudioTrack() 01 --> file = " + mPCMPath);
+                    FileInputStream fis = new FileInputStream(mPCMPath);
+                    dis = new DataInputStream(fis);
                     byte[] buffer = new byte[mBufferSizeInBytes]; //设置读取缓冲区
                     int length;
                     while ((length = dis.read(buffer, 0, buffer.length)) > 0) {
@@ -182,6 +188,8 @@ public final class AudioRecorderUtil{
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (Exception e){
                     e.printStackTrace();
                 } finally {
                     if (dis != null) {
@@ -238,15 +246,14 @@ public final class AudioRecorderUtil{
      * @return
      */
     private AudioTrack getAudioTrack(){
-        if (null == mAudioTrack){
-            mAudioTrack = new AudioTrack(
-                    AudioManager.STREAM_MUSIC,
-                    44100,
-                    AudioFormat.CHANNEL_OUT_STEREO,
-                    AudioFormat.ENCODING_PCM_16BIT,
-                    mBufferSizeInBytes,
-                    AudioTrack.MODE_STREAM);
-        }
+        //每次使用AudioTrack必须重新初始化，否则会出错
+        mAudioTrack = new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                44100,
+                AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                mBufferSizeInBytes,
+                AudioTrack.MODE_STREAM);
         return mAudioTrack;
     }
 
