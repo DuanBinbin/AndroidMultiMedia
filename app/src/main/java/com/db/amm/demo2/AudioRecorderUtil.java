@@ -34,23 +34,23 @@ import java.util.Date;
 public final class AudioRecorderUtil{
 
     /*****************单利实现**************************/
-//    private static volatile AudioRecorderUtil instance = null;
+    private static volatile AudioRecorderUtil instance = null;
 
-    public AudioRecorderUtil(){
+    private AudioRecorderUtil(){
         mBufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING); //获取默认最小缓冲区大小
         mAudioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, mBufferSizeInBytes); //初始化
     }
 
-//    public static synchronized AudioRecorderUtil getInstance(){
-//        if (null == instance){
-//            synchronized (AudioRecorderUtil.class){
-//                if (null == instance){
-//                    instance = new AudioRecorderUtil();
-//                }
-//            }
-//        }
-//        return instance;
-//    }
+    public static synchronized AudioRecorderUtil getInstance(){
+        if (null == instance){
+            synchronized (AudioRecorderUtil.class){
+                if (null == instance){
+                    instance = new AudioRecorderUtil();
+                }
+            }
+        }
+        return instance;
+    }
 
     /*****************AudioRecord使用的参数**************************/
     public enum Status { //录音的状态

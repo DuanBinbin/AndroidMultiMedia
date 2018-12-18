@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
-    private AudioRecorderUtil mAudioRecorderUtil;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -132,16 +130,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 {
                     //录音
                     btn.setText(ResourceUtil.getString(R.string.audio_action_stop));
-                    startRecord();
+//                    startRecord();
+                    AudioRecorderUtil.getInstance().startRecord();
                 } else {
                     btn.setText(ResourceUtil.getString(R.string.audio_action_record));
-                    stopRecord();
+//                    stopRecord();
+                    AudioRecorderUtil.getInstance().stopRecord();
                 }
                 break;
 
             case R.id.btn_audio_action_play_audioTrack:
                 //AudioTrack播放
-                playWithAudioTrack();
+//                playWithAudioTrack();
+                AudioRecorderUtil.getInstance().playWithAudioTrack();
                 break;
 
             case R.id.btn_audio_action_play_audioTrack_left:
@@ -154,7 +155,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_audio_action_play_MediaPlayer:
                 //MediaPlayer播放
-                playWithMediaPlayer();
+//                playWithMediaPlayer();
+                AudioRecorderUtil.getInstance().playWithMediaPlayer();
                 break;
         }
     }
