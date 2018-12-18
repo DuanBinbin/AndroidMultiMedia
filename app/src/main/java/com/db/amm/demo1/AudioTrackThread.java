@@ -7,6 +7,7 @@ import android.media.AudioTrack;
 import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -28,16 +29,17 @@ final class AudioTrackThread extends Thread {
     // private int mChannelConfig = AudioFormat.CHANNEL_OUT_STEREO;
 
     private static final String TAG = "AudioTrackThread";
-    private Activity mActivity;
+
     private AudioTrack mAudioTrack;
     private byte[] data;
-    private String mFileName;
 
-    public AudioTrackThread(Activity activity, String fileName) {
-        mActivity = activity;
-        mFileName = fileName;
+    private InputStream mInputStream;
 
+    public AudioTrackThread(InputStream inputStream) {
+
+        this.mInputStream = inputStream;
         int bufferSize = AudioTrack.getMinBufferSize(mSampleRateInHz, mChannelConfig, AudioFormat.ENCODING_PCM_16BIT);
+
         mAudioTrack = new AudioTrack(
                 AudioManager.STREAM_MUSIC,
                 mSampleRateInHz,
@@ -55,7 +57,7 @@ final class AudioTrackThread extends Thread {
                 mAudioTrack.play();
 
             ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            InputStream inputStream = mActivity.getResources().getAssets().open(mFileName);
+
 
             // 缓冲区
             byte[] buffer = new byte[1024];
@@ -67,7 +69,7 @@ final class AudioTrackThread extends Thread {
             while (null != mAudioTrack && AudioTrack.PLAYSTATE_STOPPED != mAudioTrack.getPlayState()) {
                 // 字符长度
                 int len;
-                if (-1 != (len = inputStream.read(buffer))) {
+                if (-1 != (len = mInputStream.read(buffer))) {
                     byteArrayOutputStream.write(buffer, 0, len);
                     data = byteArrayOutputStream.toByteArray();
                     Log.i(TAG, "run: 已缓冲 : " + data.length);
@@ -99,6 +101,14 @@ final class AudioTrackThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 设置播放文件的InputStream
+     * @param inputStream
+     */
+    public void setInputStream(InputStream inputStream){
+        this.mInputStream = inputStream;
     }
 
     /**

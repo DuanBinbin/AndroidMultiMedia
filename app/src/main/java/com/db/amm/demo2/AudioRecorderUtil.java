@@ -75,6 +75,10 @@ public final class AudioRecorderUtil{
         return mPCMFile;
     }
 
+    public String getPCMPath(){
+        return mPCMPath;
+    }
+
     /**
      * 使用AudioRecord录制音频
      * 1. 设置参数

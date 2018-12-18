@@ -7,6 +7,8 @@ import android.graphics.Matrix;
 import android.os.Environment;
 import android.util.Log;
 
+import com.db.amm.log.LogHelper;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -206,6 +208,40 @@ public class FileUtils {
             e.printStackTrace();
         }
         return bytes;
+    }
+
+    /**
+     * 获取InputStream
+     * @param fileName  文件路径
+     * @return
+     */
+    public static InputStream getInputStream(String fileName){
+        int size;
+        InputStream fis = null;
+
+        try {
+            fis = new FileInputStream(fileName);
+            size = fis.available();
+            System.out.println("可读取的字节数 " + size);
+            char [] text = new char[size];
+            for (int i = 0; i < text.length; i++) {
+                text[i] = ((char)fis.read());
+                LogHelper.v("","content = " + text[i]);
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        } finally {
+//            try {
+//                assert fis != null;
+////                fis.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+        }
+
+        return fis;
     }
 
 }

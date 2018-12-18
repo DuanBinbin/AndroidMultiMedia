@@ -1,6 +1,6 @@
 package com.db.amm.demo1;
 
-import android.app.Activity;
+import java.io.InputStream;
 
 /**
  * @描述：     @音频文件左右声道播放，主要用来播放已经存在的音频文件
@@ -13,26 +13,35 @@ public final class AudioTrackUtil {
     private AudioTrackThread mChannelLeftPlayer;
     private AudioTrackThread mChannelRightPlayer;
 
-    private String mPlayFileName;
-    private Activity mActivity;
+    /*****************单利实现**************************/
+    private static volatile  AudioTrackUtil instance = null;
 
-    public void setPlayFileName(String mPlayFileName) {
-        this.mPlayFileName = mPlayFileName;
+    private AudioTrackUtil(){
+
     }
 
-    public AudioTrackUtil(Activity activity){
-        this.mActivity = activity;
+    public static synchronized AudioTrackUtil getInstance(){
+        if (null == instance){
+            synchronized (AudioTrackUtil.class){
+                if (null == instance){
+                    instance = new AudioTrackUtil();
+                }
+            }
+        }
+        return instance;
     }
+
+    /*****************播放功能**************************/
 
     /**
      * 开始播放
      */
-    public void start(){
+    public void start(InputStream inputStream){
         if (null != mAudioTrackThread) {
             mAudioTrackThread.stopp();
             mAudioTrackThread = null;
         }
-        mAudioTrackThread = new AudioTrackThread(mActivity, mPlayFileName);
+        mAudioTrackThread = new AudioTrackThread(inputStream);
         mAudioTrackThread.start();
     }
 
@@ -95,10 +104,10 @@ public final class AudioTrackUtil {
 
     /**
      * 左右声道播放不同的数据
-     * @param leftFileName
-     * @param rightFileName
+     * @param inputStreamLeft
+     * @param inputStreamRight
      */
-    public void playDifferentFiles(String leftFileName,String rightFileName){
+    public void playDifferentFiles(InputStream inputStreamLeft,InputStream inputStreamRight){
         if (null != mChannelLeftPlayer) {
             mChannelLeftPlayer.stopp();
             mChannelLeftPlayer = null;
@@ -108,8 +117,8 @@ public final class AudioTrackUtil {
             mChannelRightPlayer = null;
         }
 
-        mChannelLeftPlayer = new AudioTrackThread(mActivity, leftFileName);
-        mChannelRightPlayer = new AudioTrackThread(mActivity, rightFileName);
+        mChannelLeftPlayer = new AudioTrackThread(inputStreamLeft);
+        mChannelRightPlayer = new AudioTrackThread(inputStreamRight);
 
         mChannelLeftPlayer.setChannel(true, false);
         mChannelRightPlayer.setChannel(false, true);
