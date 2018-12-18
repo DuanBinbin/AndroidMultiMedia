@@ -53,7 +53,7 @@ public final class AudioRecorderUtil{
     }
 
     /*****************AudioRecord使用的参数**************************/
-    public enum Status { //录音的状态
+    enum Status { //录音的状态
         RUNNING, //正在录音
         END //录音停止
     }
@@ -148,7 +148,7 @@ public final class AudioRecorderUtil{
     /**
      * 使用AudioTrack播放pcm音频
      */
-    public final void playWithAudioTrack() {
+    public void playWithAudioTrack() {
         if (mBufferSizeInBytes == 0) {
             ToastUtils.show(BaseApplication.getContext(), "先录制，才能播放");
             return;
@@ -195,7 +195,7 @@ public final class AudioRecorderUtil{
     /**
      * 使用MediaPlayer播放wav音频
      */
-    public final void playWithMediaPlayer() {
+    public void playWithMediaPlayer() {
         if (!TextUtils.isEmpty(mOutputPath)) {
             MediaPlayer mediaPlayer = new MediaPlayer();
             try {
