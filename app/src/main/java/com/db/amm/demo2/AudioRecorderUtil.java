@@ -60,6 +60,8 @@ public final class AudioRecorderUtil{
     }
 
     private AudioRecord mAudioRecord;
+    private AudioTrack mAudioTrack;
+
     private final static int AUDIO_INPUT = MediaRecorder.AudioSource.MIC;
     private final static int AUDIO_SAMPLE_RATE = 44100;    // 采样率44100是目前的标准，但是某些设备仍然支持22050，16000，11025， 采样频率一般共分为22.05KHz、44.1KHz、48KHz三个等级
     private final static int AUDIO_CHANNEL = AudioFormat.CHANNEL_IN_STEREO;// 音频通道，双通道
@@ -69,7 +71,8 @@ public final class AudioRecorderUtil{
     private String mPCMPath; //pcm存储地址
     private String mWavString;
     private Status mStatus = Status.END;
-    FileOutputStream fos;
+    private FileOutputStream fos;
+    private String mOutputPath;
 
     public File getPCMFile(){
         return mPCMFile;
@@ -125,8 +128,6 @@ public final class AudioRecorderUtil{
         }).start();
     }
 
-    private String mOutputPath;
-
     /**
      * 停止录制音频
      * 1. 可以对录音文件进行转换，pcm->wav
@@ -162,13 +163,7 @@ public final class AudioRecorderUtil{
             ToastUtils.show(BaseApplication.getContext(), "先录制，才能播放");
             return;
         }
-        final AudioTrack audioTrack = new AudioTrack(
-                AudioManager.STREAM_MUSIC,
-                44100,
-                AudioFormat.CHANNEL_OUT_STEREO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                mBufferSizeInBytes,
-                AudioTrack.MODE_STREAM);
+        final AudioTrack audioTrack = getAudioTrack();
         //读取pcm文件
         new Thread(new Runnable() {
             @Override
@@ -243,13 +238,29 @@ public final class AudioRecorderUtil{
      * @return
      */
     private AudioTrack getAudioTrack(){
-        return new AudioTrack(
-                AudioManager.STREAM_MUSIC,
-                44100,
-                AudioFormat.CHANNEL_OUT_STEREO,
-                AudioFormat.ENCODING_PCM_16BIT,
-                mBufferSizeInBytes,
-                AudioTrack.MODE_STREAM);
+        if (null == mAudioTrack){
+            mAudioTrack = new AudioTrack(
+                    AudioManager.STREAM_MUSIC,
+                    44100,
+                    AudioFormat.CHANNEL_OUT_STEREO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    mBufferSizeInBytes,
+                    AudioTrack.MODE_STREAM);
+        }
+        return mAudioTrack;
+    }
+
+    /**
+     * 设置左右声道是否可用
+     *
+     * @param left  左声道
+     * @param right 右声道
+     */
+    public void setChannel(boolean left, boolean right) {
+        if (null != mAudioTrack) {
+            mAudioTrack.setStereoVolume(left ? 1 : 0, right ? 1 : 0);
+            mAudioTrack.play();
+        }
     }
 
     /**

@@ -118,15 +118,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_audio_action_stop_audioTrack_left:
-                AudioTrackUtil.getInstance().disableChannelLeft();
+                AudioRecorderUtil.getInstance().setChannel(false,true);
                 break;
 
             case R.id.btn_audio_action_stop_audioTrack_right:
-                AudioTrackUtil.getInstance().disableChannelRight();
+                AudioRecorderUtil.getInstance().setChannel(true,false);
                 break;
 
             case R.id.btn_audio_action_restore:
-                AudioTrackUtil.getInstance().restoreDualChannels();
+                AudioRecorderUtil.getInstance().setChannel(true,true);
                 break;
 
                 default:
