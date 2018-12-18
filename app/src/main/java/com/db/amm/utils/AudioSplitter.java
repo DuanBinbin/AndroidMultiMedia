@@ -1,5 +1,7 @@
 package com.db.amm.utils;
 
+import com.db.amm.base.BaseApplication;
+
 /**
  * @描述：     @音频拆分工具类，将Android立体声pcm的数据结构，左右声道拆分，左右声道反转
  * @作者：     @Bin
@@ -24,15 +26,20 @@ public final class AudioSplitter {
      * @param data 输入数据
      */
     public final void splitStereoPcm(byte[] data) {
-        int monoLength = data.length / 2;
-        leftData = new byte[monoLength];
-        rightData = new byte[monoLength];
-        for (int i = 0; i < monoLength; i++) {
-            if (i % 2 == 0) {
-                System.arraycopy(data, i * 2, leftData, i, 2);
-            } else {
-                System.arraycopy(data, i * 2, rightData, i - 1, 2);
+        try {
+            int monoLength = data.length / 2;
+            leftData = new byte[monoLength];
+            rightData = new byte[monoLength];
+            for (int i = 0; i < monoLength; i++) {
+                if (i % 2 == 0) {
+                    System.arraycopy(data, i * 2, leftData, i, 2);
+                } else {
+                    System.arraycopy(data, i * 2, rightData, i - 1, 2);
+                }
             }
+            ToastUtils.show(BaseApplication.getContext(),"立体声拆分成功");
+        } catch (Exception e){
+            ToastUtils.show(BaseApplication.getContext(),"立体声拆分失败,原因：" + e.getMessage());
         }
     }
 
