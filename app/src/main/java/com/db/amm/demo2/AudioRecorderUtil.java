@@ -33,6 +33,25 @@ import java.util.Date;
  */
 public final class AudioRecorderUtil{
 
+    /*****************单利实现**************************/
+//    private static volatile AudioRecorderUtil instance = null;
+
+    public AudioRecorderUtil(){
+        mBufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING); //获取默认最小缓冲区大小
+        mAudioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, mBufferSizeInBytes); //初始化
+    }
+
+//    public static synchronized AudioRecorderUtil getInstance(){
+//        if (null == instance){
+//            synchronized (AudioRecorderUtil.class){
+//                if (null == instance){
+//                    instance = new AudioRecorderUtil();
+//                }
+//            }
+//        }
+//        return instance;
+//    }
+
     /*****************AudioRecord使用的参数**************************/
     public enum Status { //录音的状态
         RUNNING, //正在录音
@@ -63,8 +82,6 @@ public final class AudioRecorderUtil{
      * http://www.jianshu.com/p/bee958826a9e，AudioTrack源码分析
      */
     public void startRecord() {
-        mBufferSizeInBytes = AudioRecord.getMinBufferSize(AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING); //获取默认最小缓冲区大小
-        mAudioRecord = new AudioRecord(AUDIO_INPUT, AUDIO_SAMPLE_RATE, AUDIO_CHANNEL, AUDIO_ENCODING, mBufferSizeInBytes); //初始化
         mAudioRecord.startRecording(); //开始录音
         new Thread(new Runnable() { //录音转存为pcm文件需要在子线程
             @Override
