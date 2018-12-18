@@ -1,17 +1,8 @@
 package com.db.amm;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.AudioFormat;
-import android.media.AudioManager;
-import android.media.AudioRecord;
-import android.media.AudioTrack;
-import android.media.MediaPlayer;
-import android.media.MediaRecorder;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,22 +11,11 @@ import android.view.View;
 import android.widget.Button;
 
 import com.db.amm.demo2.AudioRecorderUtil;
-import com.db.amm.log.LogHelper;
-import com.db.amm.permission.PermissionHolder;
+import com.db.amm.utils.AudioSplitter;
 import com.db.amm.utils.FileUtils;
-import com.db.amm.utils.MediaUtils;
 import com.db.amm.utils.PermissionUtils;
 import com.db.amm.utils.ResourceUtil;
 import com.db.amm.utils.ToastUtils;
-
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
@@ -112,16 +92,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_audio_action_play_audioTrack_left:
                 //AudioTrack左声道播放
+                playWithAudioTrackLeft();
                 break;
 
             case R.id.btn_audio_action_play_audioTrack_right:
                 //AudioTrack右声道播放
+                playWithAudioTrackRight();
                 break;
 
             case R.id.btn_audio_action_play_MediaPlayer:
                 //MediaPlayer播放
                 AudioRecorderUtil.getInstance().playWithMediaPlayer();
                 break;
+        }
+    }
+
+    private void playWithAudioTrackLeft(){
+        try {
+            AudioSplitter.splitStereoPcm(FileUtils.fileToBytes(AudioRecorderUtil.getInstance().getPCMFile()));
+            AudioRecorderUtil.getInstance().playWithAudioTrack(AudioSplitter.getLeftData());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void playWithAudioTrackRight(){
+        try{
+            AudioSplitter.splitStereoPcm(FileUtils.fileToBytes(AudioRecorderUtil.getInstance().getPCMFile()));
+            AudioRecorderUtil.getInstance().playWithAudioTrack(AudioSplitter.getRightData());
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

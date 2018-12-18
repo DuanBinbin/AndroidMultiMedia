@@ -13,6 +13,7 @@ import com.db.amm.utils.FileUtils;
 import com.db.amm.utils.MediaUtils;
 import com.db.amm.utils.ToastUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -69,6 +70,10 @@ public final class AudioRecorderUtil{
     private String mWavString;
     private Status mStatus = Status.END;
     FileOutputStream fos;
+
+    public File getPCMFile(){
+        return mPCMFile;
+    }
 
     /**
      * 使用AudioRecord录制音频
@@ -190,6 +195,57 @@ public final class AudioRecorderUtil{
                 }
             }
         }).start();
+    }
+
+    /**
+     * 使用AudioTrack播放pcm音频
+     */
+    public void playWithAudioTrack(final byte[] playData) {
+        final AudioTrack audioTrack = getAudioTrack();
+        //读取pcm文件
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                DataInputStream dis = null;
+                try {
+                    dis = new DataInputStream(new ByteArrayInputStream(playData));
+                    byte[] buffer = new byte[mBufferSizeInBytes]; //设置读取缓冲区
+                    int length;
+                    while ((length = dis.read(buffer, 0, buffer.length)) > 0) {
+                        audioTrack.write(buffer, 0, length);
+                        audioTrack.play();
+                    }
+                    audioTrack.stop();
+                    audioTrack.release();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    if (dis != null) {
+                        try {
+                            dis.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 获取AudioTrack
+     * @return
+     */
+    private AudioTrack getAudioTrack(){
+        return new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                44100,
+                AudioFormat.CHANNEL_OUT_STEREO,
+                AudioFormat.ENCODING_PCM_16BIT,
+                mBufferSizeInBytes,
+                AudioTrack.MODE_STREAM);
     }
 
     /**

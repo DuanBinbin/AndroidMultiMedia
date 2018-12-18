@@ -10,14 +10,14 @@ import com.db.amm.base.BaseApplication;
  */
 public final class AudioSplitter {
 
-    private byte[] leftData;
-    private byte[] rightData;
+    private static byte[] leftData;
+    private static byte[] rightData;
 
-    public byte[] getLeftData() {
+    public static byte[] getLeftData() {
         return leftData;
     }
 
-    public byte[] getRightData() {
+    public static byte[] getRightData() {
         return rightData;
     }
 
@@ -25,7 +25,7 @@ public final class AudioSplitter {
      * 立体声拆分
      * @param data 输入数据
      */
-    public final void splitStereoPcm(byte[] data) {
+    public static final void splitStereoPcm(byte[] data) {
         try {
             int monoLength = data.length / 2;
             leftData = new byte[monoLength];
@@ -48,7 +48,7 @@ public final class AudioSplitter {
      * @param data  输入数据
      * @return      反转后的数据
      */
-    public final byte[] getReversedData(byte[] data) {
+    public static final byte[] getReversedData(byte[] data) {
         byte[] reversed = new byte[data.length];
         for (int i = 0; i < data.length - 3; i = i + 4) {
             reversed[i] = data[i+2];
