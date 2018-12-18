@@ -1,5 +1,10 @@
 package com.db.amm.demo1;
 
+import com.db.amm.base.BaseApplication;
+import com.db.amm.utils.FileUtils;
+import com.db.amm.utils.ToastUtils;
+
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 /**
@@ -35,14 +40,22 @@ public final class AudioTrackUtil {
 
     /**
      * 开始播放
+     *
+     * @param fileName 文件绝对路径
      */
-    public void start(InputStream inputStream){
-        if (null != mAudioTrackThread) {
-            mAudioTrackThread.stopp();
-            mAudioTrackThread = null;
+    public void start(String fileName){
+        try{
+            if (null != mAudioTrackThread) {
+                mAudioTrackThread.stopp();
+                mAudioTrackThread = null;
+            }
+            mAudioTrackThread = new AudioTrackThread(FileUtils.getInputStream(fileName));
+            mAudioTrackThread.start();
+        } catch (FileNotFoundException e){
+            ToastUtils.show(BaseApplication.getContext(),e.getMessage());
+        } catch (Exception e){
+            e.printStackTrace();
         }
-        mAudioTrackThread = new AudioTrackThread(inputStream);
-        mAudioTrackThread.start();
     }
 
     /**

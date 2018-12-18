@@ -114,12 +114,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
 
             case R.id.btn_audio_action_play:
-                try{
-                    AudioTrackUtil.getInstance().start(
-                            FileUtils.getInputStream(AudioRecorderUtil.getInstance().getPCMPath()));
-                } catch (Exception e){
-                    e.printStackTrace();
-                }
+                AudioTrackUtil.getInstance().start(AudioRecorderUtil.getInstance().getPCMPath());
                 break;
 
             case R.id.btn_audio_action_stop_audioTrack_left:
@@ -133,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.btn_audio_action_restore:
                 AudioTrackUtil.getInstance().restoreDualChannels();
                 break;
+
+                default:
+                    break;
         }
     }
 

@@ -215,33 +215,9 @@ public class FileUtils {
      * @param fileName  文件路径
      * @return
      */
-    public static InputStream getInputStream(String fileName){
-        int size;
-        InputStream fis = null;
-
-        try {
-            fis = new FileInputStream(fileName);
-            size = fis.available();
-            System.out.println("可读取的字节数 " + size);
-            char [] text = new char[size];
-            for (int i = 0; i < text.length; i++) {
-                text[i] = ((char)fis.read());
-                LogHelper.v("","content = " + text[i]);
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e){
-            e.printStackTrace();
-        } finally {
-//            try {
-//                assert fis != null;
-////                fis.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-        }
-
-        return fis;
+    public static InputStream getInputStream(String fileName) throws FileNotFoundException{
+        final File initialFile = new File(fileName);
+        return new DataInputStream(new FileInputStream(initialFile));
     }
 
 }
