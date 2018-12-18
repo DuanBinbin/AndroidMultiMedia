@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">AMM</string>
+    <string name="audio_action_record">录制</string>
+    <string name="audio_action_stop">停止</string>
+    <string name="audio_action_play_audioTrack">AudioTrack播放</string>
+    <string name="audio_action_play_audioTrack_left">AudioTrack左声道</string>
+    <string name="audio_action_play_audioTrack_right">AudioTrack右声道</string>
+    <string name="audio_action_play_MediaPlayer">MediaPlayer播放</string>
+
+    <string name="audio_action_play">播放</string>
+    <string name="audio_action_stop_audioTrack_left">禁左</string>
+    <string name="audio_action_stop_audioTrack_right">禁右</string>
+    <string name="audio_action_restore">恢复</string>
+</resources>
