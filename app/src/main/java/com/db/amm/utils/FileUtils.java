@@ -11,6 +11,7 @@ import com.db.amm.log.LogHelper;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
@@ -20,6 +21,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -197,6 +199,11 @@ public class FileUtils {
         return sb.toString();
     }
 
+    /**
+     * convert File to byte[]
+     * @param file
+     * @return
+     */
     public static byte[] fileToBytes(File file){
         byte[] bytes = null;
         try {
@@ -208,6 +215,30 @@ public class FileUtils {
             e.printStackTrace();
         }
         return bytes;
+    }
+
+    /**
+     * convert byte[] to File
+     * @param data
+     * @param fileName
+     * @return
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    public static File bytesToFile(byte[] data,String fileName) {
+        File fileFromBytes = null;
+        try {
+            ByteArrayInputStream bis = new ByteArrayInputStream(data);
+            ObjectInputStream ois = new ObjectInputStream(bis);
+            fileFromBytes = (File) ois.readObject();
+            bis.close();
+            ois.close();
+        } catch (ClassNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        return fileFromBytes;
     }
 
     /**

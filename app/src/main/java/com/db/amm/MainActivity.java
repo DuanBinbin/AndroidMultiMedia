@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
+import com.db.amm.base.BaseActivity;
 import com.db.amm.demo1.AudioTrackUtil;
 import com.db.amm.demo2.AudioRecorderUtil;
 import com.db.amm.utils.AudioSplitter;
@@ -22,7 +23,7 @@ import java.security.spec.ECField;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
 
