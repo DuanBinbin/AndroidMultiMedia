@@ -3,7 +3,7 @@ package com.db.amm.demo1;
 import android.app.Activity;
 
 /**
- * @描述：     @音频文件左右声道播放
+ * @描述：     @音频文件左右声道播放，主要用来播放已经存在的音频文件
  * @作者：     @Bin
  * @创建时间： @2018/12/17 17:58
  */
