@@ -51,12 +51,12 @@
         android:textAllCaps="false"
         android:text="@string/audio_action_play_MediaPlayer"/>
 
-    <Button
-        android:id="@+id/btn_audio_action_play"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAllCaps="false"
-        android:text="@string/audio_action_play"/>
+    <!--<Button-->
+        <!--android:id="@+id/btn_audio_action_play"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:text="@string/audio_action_play"/>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,5 +88,16 @@
             android:text="@string/audio_action_restore"/>
 
     </LinearLayout>
+
+    <com.cokus.wavelibrary.view.WaveSurfaceView
+        android:id="@+id/wavesfv"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp"/>
+
+    <com.cokus.wavelibrary.view.WaveformView
+        android:id="@+id/waveview"
+        android:visibility="invisible"
+        android:layout_width="fill_parent"
+        android:layout_height="120dp" />
 
 </LinearLayout>

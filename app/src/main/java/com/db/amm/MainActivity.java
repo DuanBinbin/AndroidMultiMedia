@@ -5,13 +5,14 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 
+import com.cokus.wavelibrary.draw.WaveCanvas;
+import com.cokus.wavelibrary.view.WaveSurfaceView;
+import com.cokus.wavelibrary.view.WaveformView;
 import com.db.amm.base.BaseActivity;
-import com.db.amm.demo1.AudioTrackUtil;
 import com.db.amm.demo2.AudioRecorderUtil;
 import com.db.amm.utils.AudioSplitter;
 import com.db.amm.utils.FileUtils;
@@ -19,13 +20,18 @@ import com.db.amm.utils.PermissionUtils;
 import com.db.amm.utils.ResourceUtil;
 import com.db.amm.utils.ToastUtils;
 
-import java.security.spec.ECField;
+import butterknife.BindView;
 
 import static android.support.v4.content.PermissionChecker.PERMISSION_DENIED;
 
 public class MainActivity extends BaseActivity {
 
     private final static String TAG = MainActivity.class.getSimpleName();
+
+    @BindView(R.id.waveview)WaveformView waveView;
+    @BindView(R.id.wavesfv)WaveSurfaceView waveSfv;
+
+    private WaveCanvas waveCanvas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +44,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_audio_action_play_audioTrack_right).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_play_MediaPlayer).setOnClickListener(this);
 
-        findViewById(R.id.btn_audio_action_play).setOnClickListener(this);
+//        findViewById(R.id.btn_audio_action_play).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_stop_audioTrack_left).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_stop_audioTrack_right).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_restore).setOnClickListener(this);
@@ -114,9 +120,9 @@ public class MainActivity extends BaseActivity {
                 AudioRecorderUtil.getInstance().playWithMediaPlayer();
                 break;
 
-            case R.id.btn_audio_action_play:
-                AudioTrackUtil.getInstance().start(AudioRecorderUtil.getInstance().getPCMPath());
-                break;
+//            case R.id.btn_audio_action_play:
+//                AudioTrackUtil.getInstance().start(AudioRecorderUtil.getInstance().getPCMPath());
+//                break;
 
             case R.id.btn_audio_action_stop_audioTrack_left:
                 AudioRecorderUtil.getInstance().setChannel(false,true);
@@ -152,4 +158,42 @@ public class MainActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
+   /* *//** 载入wav文件显示波形 *//*
+    private void loadFromFile() {
+        try {
+            Thread.sleep(300);//让文件写入完成后再载入波形 适当的休眠下
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        mFile = new File(U.DATA_DIRECTORY + mFileName + ".wav");
+        mLoadingKeepGoing = true;
+        // Load the sound file in a background thread
+        mLoadSoundFileThread = new Thread() {
+            public void run() {
+                try {
+                    mSoundFile = SoundFile.create(mFile.getAbsolutePath(),null);
+                    if (mSoundFile == null) {
+                        return;
+                    }
+                    mPlayer = new SamplePlayer(mSoundFile);
+                } catch (final Exception e) {
+                    e.printStackTrace();
+                    return;
+                }
+                if (mLoadingKeepGoing) {
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            finishOpeningSoundFile();
+                            waveSfv.setVisibility(View.INVISIBLE);
+                            waveView.setVisibility(View.VISIBLE);
+                        }
+                    };
+                    MainActivity.this.runOnUiThread(runnable);
+                }
+            }
+        };
+        mLoadSoundFileThread.start();
+    }*/
+
 }
