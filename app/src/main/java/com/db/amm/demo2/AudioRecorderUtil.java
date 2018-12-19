@@ -57,7 +57,7 @@ public final class AudioRecorderUtil{
     }
 
     /*****************AudioRecord使用的参数**************************/
-    enum Status { //录音的状态
+    public enum Status { //录音的状态
         RUNNING, //正在录音
         END //录音停止
     }
@@ -76,6 +76,10 @@ public final class AudioRecorderUtil{
     private Status mStatus = Status.END;
     private FileOutputStream fos;
     private String mOutputPath;
+
+    public Status getCurStatus(){
+        return mStatus;
+    }
 
     public File getPCMFile(){
         return mPCMFile;

@@ -33,12 +33,15 @@ public final class AudioSplitter {
             for (int i = 0; i < monoLength; i++) {
                 if (i % 2 == 0) {
                     System.arraycopy(data, i * 2, leftData, i, 2);
+                    leftData[2 * i] = data[i];
+                    leftData[2 * i + 1] = data[i + 1];
                 } else {
                     System.arraycopy(data, i * 2, rightData, i - 1, 2);
                 }
             }
             ToastUtils.show(BaseApplication.getContext(),"立体声拆分成功");
         } catch (Exception e){
+            e.printStackTrace();
             ToastUtils.show(BaseApplication.getContext(),"立体声拆分失败,原因：" + e.getMessage());
         }
     }
@@ -57,5 +60,30 @@ public final class AudioSplitter {
             reversed[i+3] = data[i+1];
         }
         return reversed;
+    }
+
+    /**
+     * 合成声音
+     * @param data 输入数据
+     */
+    public static final void monoToStereo(byte[] data) {
+        try {
+            int monoLength = data.length * 2;
+            leftData = new byte[monoLength];
+            rightData = new byte[monoLength];
+            for (int i = 0; i < monoLength; i++) {
+                if (i % 2 == 0) {
+                    leftData[2 * i] = data[i];
+                    leftData[2 * i + 1] = data[i + 1];
+                } else {
+                    rightData[2 * i] = data[i - 1];
+                    rightData[2 * i + 1] = data[i];
+                }
+            }
+            ToastUtils.show(BaseApplication.getContext(),"声音合成成功");
+        } catch (Exception e){
+            e.printStackTrace();
+            ToastUtils.show(BaseApplication.getContext(),"声音合成失败,原因：" + e.getMessage());
+        }
     }
 }

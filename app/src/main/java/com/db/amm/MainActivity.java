@@ -6,19 +6,29 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.Button;
 
 import com.cokus.wavelibrary.draw.WaveCanvas;
+import com.cokus.wavelibrary.utils.SamplePlayer;
+import com.cokus.wavelibrary.utils.SoundFile;
 import com.cokus.wavelibrary.view.WaveSurfaceView;
 import com.cokus.wavelibrary.view.WaveformView;
 import com.db.amm.base.BaseActivity;
+import com.db.amm.base.BaseApplication;
 import com.db.amm.demo2.AudioRecorderUtil;
+import com.db.amm.log.LogHelper;
 import com.db.amm.utils.AudioSplitter;
 import com.db.amm.utils.FileUtils;
+import com.db.amm.utils.MusicSimilarityUtil;
 import com.db.amm.utils.PermissionUtils;
 import com.db.amm.utils.ResourceUtil;
 import com.db.amm.utils.ToastUtils;
+
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.InputStream;
 
 import butterknife.BindView;
 
@@ -44,7 +54,7 @@ public class MainActivity extends BaseActivity {
         findViewById(R.id.btn_audio_action_play_audioTrack_right).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_play_MediaPlayer).setOnClickListener(this);
 
-//        findViewById(R.id.btn_audio_action_play).setOnClickListener(this);
+        findViewById(R.id.btn_compare_mono_channel).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_stop_audioTrack_left).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_stop_audioTrack_right).setOnClickListener(this);
         findViewById(R.id.btn_audio_action_restore).setOnClickListener(this);
@@ -91,10 +101,11 @@ public class MainActivity extends BaseActivity {
             case R.id.btn_audio_record:
                 if (TextUtils.equals(btn.getText(),ResourceUtil.getString(R.string.audio_action_record)))
                 {
-                    //录音
+                    //开始录音
                     btn.setText(ResourceUtil.getString(R.string.audio_action_stop));
                     AudioRecorderUtil.getInstance().startRecord();
                 } else {
+                    //结束录音
                     btn.setText(ResourceUtil.getString(R.string.audio_action_record));
                     AudioRecorderUtil.getInstance().stopRecord();
                 }
@@ -120,9 +131,9 @@ public class MainActivity extends BaseActivity {
                 AudioRecorderUtil.getInstance().playWithMediaPlayer();
                 break;
 
-//            case R.id.btn_audio_action_play:
-//                AudioTrackUtil.getInstance().start(AudioRecorderUtil.getInstance().getPCMPath());
-//                break;
+            case R.id.btn_compare_mono_channel:
+                getScoreByCompareMonoFile();
+                break;
 
             case R.id.btn_audio_action_stop_audioTrack_left:
                 AudioRecorderUtil.getInstance().setChannel(false,true);
@@ -159,14 +170,21 @@ public class MainActivity extends BaseActivity {
         }
     }
 
-   /* *//** 载入wav文件显示波形 *//*
-    private void loadFromFile() {
+    private boolean mLoadingKeepGoing;
+    private Thread mLoadSoundFileThread;
+    private SoundFile mSoundFile;
+    private SamplePlayer mPlayer;
+
+    /**
+     * 载入wav文件显示波形
+     */
+    private void loadFromFile(File loadFile) {
+        final File mFile = loadFile;
         try {
             Thread.sleep(300);//让文件写入完成后再载入波形 适当的休眠下
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        mFile = new File(U.DATA_DIRECTORY + mFileName + ".wav");
         mLoadingKeepGoing = true;
         // Load the sound file in a background thread
         mLoadSoundFileThread = new Thread() {
@@ -194,6 +212,37 @@ public class MainActivity extends BaseActivity {
             }
         };
         mLoadSoundFileThread.start();
-    }*/
+    }
 
+    private float mDensity;
+
+    /**waveview载入波形完成*/
+    private void finishOpeningSoundFile() {
+        waveView.setSoundFile(mSoundFile);
+        DisplayMetrics metrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+        mDensity = metrics.density;
+        waveView.recomputeHeights(mDensity);
+    }
+
+    private void getScoreByCompareMonoFile(){
+        try {
+            //split stereo audio file
+            AudioSplitter.splitStereoPcm(FileUtils.fileToBytes(AudioRecorderUtil.getInstance().getPCMFile()));
+
+            //get mono channel file data
+            final byte[] leftByte = AudioSplitter.getLeftData();
+            final byte[] rightByte = AudioSplitter.getRightData();
+            InputStream leftBis = new ByteArrayInputStream(leftByte);
+            InputStream rightBis = new ByteArrayInputStream(rightByte);
+
+            // compare
+            final float score = MusicSimilarityUtil.getScoreByCompareFile(leftBis,rightBis);
+            ToastUtils.show(BaseApplication.getContext(),score + "");
+
+            LogHelper.s("getScoreByCompareMonoFile() --> score = " + score);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
 }
