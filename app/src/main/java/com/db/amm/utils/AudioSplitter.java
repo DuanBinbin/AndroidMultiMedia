@@ -33,8 +33,6 @@ public final class AudioSplitter {
             for (int i = 0; i < monoLength; i++) {
                 if (i % 2 == 0) {
                     System.arraycopy(data, i * 2, leftData, i, 2);
-                    leftData[2 * i] = data[i];
-                    leftData[2 * i + 1] = data[i + 1];
                 } else {
                     System.arraycopy(data, i * 2, rightData, i - 1, 2);
                 }
